@@ -10,8 +10,12 @@ local nemcommon = { }
 	Item checks
 	]]
 	
--- **** Buff checks ****
-
+-- **** Buff checks **** @
+function nemcommon.targNotfocus()
+		if (UnitIsUnit("target", "focus")) then
+		return false end
+	return true
+end
 -- Checks player for Arcane/Dalaran Brilliance,Burning Wrath, Still Water
 -- True if duration > 3
 function nemcommon.tenSpellpower(thresholdtsp)
@@ -29,10 +33,10 @@ end
 -- checks for short duration buffs
 function nemcommon.tempBuffs(threshold)
 	local temp_buffs = {104509,104510,128985,33702,126577,126478,125487,136082,126605,126734,126476,138898,139133,138786,138703,104993,105702,148897,148906,146184,146046,137590,113858,114207,146218,138963,}
-	local timer = threshold or 3
+	local timerTB = threshold or 3
 	for i=1,#temp_buffs do
 		if UnitBuff("player",GetSpellInfo(temp_buffs[i])) then
-			if select(7,UnitBuff("player",GetSpellInfo(temp_buffs[i]))) - GetTime() <= timer then return true end
+			if select(7,UnitBuff("player",GetSpellInfo(temp_buffs[i]))) - GetTime() <= timerTB then return true end
 		end
 	end
 	return false
@@ -107,13 +111,36 @@ end
 
 -- **** Item Checks ***
 
--- Source Chunky destro function
+-- Source Chunky destro function @
 function nemcommon.Healthstone(target)
   if GetItemCount(5512, nil, true) == 3 then return false end
   return true
 end
 
-
+-- Some example item sub-classes are:
+--      "One-Handed Axes",
+--      "Two-Handed Axes",
+--      "Bows",
+--      "Guns",
+--      "One-Handed Maces",
+--      "Two-Handed Maces",
+--      "Polearms",
+--      "One-Handed Swords",
+--      "Two-Handed Swords",
+--      "Staves",
+--      "Fist Weapons",
+--      "Miscellaneous",
+--      "Daggers",
+--      "Thrown",
+--      "Crossbows",
+--      "Wands",
+--      "Fishing Poles"
+-- use @nemcommon.dagCheck("Two-Handed Swords") untested
+function nemcommon.dagCheck(weaptype)
+local sName, sLink, iRarity, iLevel, iMinLevel, sType, sSubType, iStackCount = GetItemInfo(GetInventoryItemID("player", GetInventorySlotInfo("MainHandSlot")))
+	local dCwt = weaptype or "Daggers"
+ if sSubType == dCwt then return true else return false end
+end
 
 
 
